@@ -1,0 +1,48 @@
+name: Test
+on: [push, pull_request]
+jobs:
+  test_profile:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Test Profile
+        uses: ./
+        with:
+          profiles: dGVzdC1wcm92aXNpb25pbmctcHJvZmlsZS1zdHJpbmc=
+
+      - name: Verify
+        run: |
+          EXPECTED="test-provisioning-profile-string"
+          ACTUAL=$(cat ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovision)
+
+          if [[ "$ACTUAL" = *"$EXPECTED"* ]]; then
+            exit 0
+          else 
+            exit 1
+          fi
+
+  test_profiles:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Test Profiles
+        uses: ./
+        with:
+          profiles: |
+            dGVzdC1wcm92aXNpb25pbmctcHJvZmlsZS1zdHJpbmc=
+            dGVzdC1wcm92aXNpb25pbmctcHJvZmlsZS1zZWNvbmQtc3RyaW5n
+
+      - name: Verify
+        run: |
+          EXPECTED="test-provisioning-profile-stringtest-provisioning-profile-second-string"
+          ACTUAL=$(cat ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovision)
+
+          if [[ "$ACTUAL" = *"$EXPECTED"* ]]; then
+            exit 0
+          else 
+            exit 1
+          fi
