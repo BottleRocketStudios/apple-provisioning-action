@@ -1,0 +1,78 @@
+name: Provisioning Setup Action
+description: Installs signing certificates (.p12) as well as provisioning profiles (.mobileprovision) on macOS runners
+author: Will McGinty
+
+inputs:
+  profiles:
+    description: The list of provisioning profiles to be copied into the appropriate directory, each Base64 encoded. Each profile should be specified on it's own line
+    required: false
+
+  signing_certificate:
+    description: The signing certificate to be imported into a keychain, Base64 encoded
+    required: false
+
+  signing_certificate_password:
+    description: The password to the signing certificate 
+    required: false
+
+  create_keychain:
+    description: Determines whether a new keychain is created
+    required: true
+    default: true
+
+  keychain_name:
+    description: The name for the keychain the signing certificate will be imported into. Defaults to 'provisioning_temporary'.
+    required: true
+    default: 'provisioning_temporary'
+
+  keychain_password:
+    description: The password to unlock the temporary keychain. Will be automatically generated when using the default keychain name
+    required: false
+
+outputs:
+  keychain_password:
+    description: The password to unlock the temporary keychain
+    value: $ {{ steps.import_certificate.outputs.keychain_password }}
+
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      id: copy_profiles
+      if: ${{ inputs.profiles != null }}
+      run: |
+        readarray -t profile_list <<< "$inputs.profiles"
+
+        for profile_string in "${profile_list[@]}"; do
+          # Decode the base64 string and write it to a temporary file
+          echo -n $profile_string | base64 --decode -o $RUNNER_TEMP/file$(date +%s).mobileprovision
+        done
+
+        # Move all the temporary files to the desired directory
+        mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+        mv $RUNNER_TEMP/*.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles
+
+    - shell: bash
+      id: import_certificate
+      if: ${{ inputs.signing_certificate != null }} && ${{ inputs.signing_certificate_password != null }}
+      run: |
+        keychain_name=${{ inputs.keychain_name }}
+        keychain_password="${${{ inputs.keychain_password }}:"$RANDOM$RANDOM"}"
+
+        # Set the password as an action output
+        echo "keychain_password=$(echo keychain_password)" >> $GITHUB_OUTPUT
+
+        # Create a new keychain if specified
+        if [ "${{ inputs.create_keychain }}" = true ]; then
+          security create-keychain -p "$keychain_password" "$keychain_name"
+        fi
+
+        # Unlock the keychain
+        security unlock-keychain -p "$keychain_password" "$keychain_name"
+
+        # Import the signing certificate
+        echo "${{ inputs.signing_certificate }} | base64 --decode | security import -k "$keychain_name" -P "${{ inputs.signing_certificate_password }}" -T /usr/bin/codesign
+
+        # Set the keychain as the default keychain
+        security default-keychain -s "$keychain_name"
+        
