@@ -41,12 +41,15 @@ runs:
       id: copy_profiles
       if: ${{ inputs.profiles != null }}
       run: |
-        IFS=$'\n' read -rd '' -a profile_list <<< "${{ inputs.profiles }}"
+        IFS=$'\n'
+        profile_list=(${{ inputs.profiles }})
 
         mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
         for profile_string in "${profile_list[@]}"; do
           # Remove newline characters from the base64 string
           profile_string=$(echo "$profile_string" | tr -d '\n' | tr -d ' ')
+          
+          echo "$profile_string"
 
           # Decode the base64 string and write it to file in the Provisioning Profiles directory
           echo -n $profile_string | base64 --decode -o ~/Library/MobileDevice/Provisioning\ Profiles/file$(date +%s).mobileprovision
