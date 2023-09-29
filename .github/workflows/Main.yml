@@ -38,10 +38,11 @@ jobs:
 
       - name: Verify
         run: |
-          EXPECTED="test-provisioning-profile-stringtest-provisioning-profile-second-string"
+          EXPECTED_A="test-provisioning-profile-string"
+          EXPECTED_B="test-provisioning-profile-second-string"
           ACTUAL=$(cat ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovision)
 
-          if [[ "$ACTUAL" = *"$EXPECTED"* ]]; then
+          if [[ "$ACTUAL" = *"$EXPECTED_A"* ]] && [[ "$ACTUAL" = *"$EXPECTED_B"* ]]; then
             exit 0
           else 
             exit 1
