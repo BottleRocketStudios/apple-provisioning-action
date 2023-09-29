@@ -44,7 +44,6 @@ runs:
         # Split the input variable by newline characters into an array
         IFS=$'\n' read -d '' -ra profile_list <<< "${{ inputs.profiles }}"
   
-        mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
         for profile_string in "${profile_list[@]}"; do
           echo $profile_string
         done
