@@ -49,10 +49,8 @@ runs:
           # Remove newline characters from the base64 string
           profile_string=$(echo "$profile_string" | tr -d '\n' | tr -d ' ')
           
-          echo "$profile_string"
-
           # Decode the base64 string and write it to file in the Provisioning Profiles directory
-          echo -n $profile_string | base64 --decode -o ~/Library/MobileDevice/Provisioning\ Profiles/file$(date +%s)_$RANDOM.mobileprovision
+          echo -n $profile_string | base64 --decode -o ~/Library/MobileDevice/Provisioning\ Profiles/file-$profile_string.mobileprovision
         done
   
     # - shell: bash
