@@ -46,9 +46,6 @@ runs:
   
         mkdir -p $HOME/Desktop/MobileDevice/Provisioning\ Profiles
         for profile_string in "${profile_list[@]}"; do
-          # Remove newline characters from the base64 string
-          profile_string=$(echo "$profile_string" | tr -d '\n')
-
           echo $profile_string
         done
 
