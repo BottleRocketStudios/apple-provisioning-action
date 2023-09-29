@@ -44,6 +44,7 @@ runs:
         set -x
         IFS=$'\n' read -ra profile_list <<< "${{ inputs.profiles }}"
 
+        mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
         for profile_string in "${profile_list[@]}"; do
           # Remove newline characters from the base64 string
           profile_string=$(echo "$profile_string" | tr -d '\n')
