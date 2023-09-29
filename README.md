@@ -6,13 +6,13 @@ A Github Action that allows you to easily import provisioning profiles and signi
 
 ```yaml
 - name: Provision
-        uses: bottlerocketstudios/apple-provisioning-action@v1
-        with:
-        signing_certificate: ${{ secrets.DISTRIBUTION_CERTIFICATE_BASE64 }}
-        signing_certificate_password: ${{ secrets.DISTRIBUTION_CERTIFICATE_PASSWORD }}
-          profiles: |
-          	${{ secrets.DISTRIBUTION_PROFILE }}
-          	${{ secrets.EXTENSION_DISTRIBUTION_PROFILE }}
+  uses: bottlerocketstudios/apple-provisioning-action@v1
+  with:
+    signing_certificate: ${{ secrets.DISTRIBUTION_CERTIFICATE_BASE64 }}
+    signing_certificate_password: ${{ secrets.DISTRIBUTION_CERTIFICATE_PASSWORD }}
+    profiles: |
+      ${{ secrets.DISTRIBUTION_PROFILE }}
+      ${{ secrets.EXTENSION_DISTRIBUTION_PROFILE }}
 ```
 
 ## Additional Arguments
