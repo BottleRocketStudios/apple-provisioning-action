@@ -44,10 +44,6 @@ runs:
         # Split the input variable by newline characters into an array
         IFS=$'\n' read -d '' -ra profile_list <<< "${{ inputs.profiles }}"
   
-        for profile_string in "${profile_list[@]}"; do
-          echo $profile_string
-        done
-
     - shell: bash
       id: import_certificate
       if: ${{ inputs.signing_certificate != null }} && ${{ inputs.signing_certificate_password != null }}
