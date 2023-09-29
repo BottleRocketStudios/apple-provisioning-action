@@ -41,7 +41,10 @@ runs:
       id: copy_profiles
       if: ${{ inputs.profiles != null }}
       run: |
-        readarray -t profile_list <<< "$inputs.profiles"
+        readarray -t profile_list <<< "${{ inputs.profiles }}"
+
+        # Split the input variable by newline characters into an array
+        IFS=$'\n' read -d '' -ra profile_list <<< "${{ inputs.profiles }}"
 
         for profile_string in "${profile_list[@]}"; do
           # Decode the base64 string and write it to a temporary file
