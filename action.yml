@@ -42,7 +42,7 @@ runs:
       if: ${{ inputs.profiles != null }}
       run: |
         set -x
-        IFS=$'\n' read -d '' -ra profile_list <<< "${{ inputs.profiles }}"
+        IFS=$'\n' read -ra profile_list <<< "${{ inputs.profiles }}"
   
     - shell: bash
       id: import_certificate
