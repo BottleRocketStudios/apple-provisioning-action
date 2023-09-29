@@ -41,7 +41,7 @@ runs:
       id: copy_profiles
       if: ${{ inputs.profiles != null }}
       run: |
-        # Split the input variable by newline characters into an array
+        set -x
         IFS=$'\n' read -d '' -ra profile_list <<< "${{ inputs.profiles }}"
   
     - shell: bash
