@@ -43,18 +43,15 @@ runs:
       run: |
         # Split the input variable by newline characters into an array
         IFS=$'\n' read -d '' -ra profile_list <<< "${{ inputs.profiles }}"
-
+  
+        mkdir -p $HOME/Desktop/MobileDevice/Provisioning\ Profiles
         for profile_string in "${profile_list[@]}"; do
           # Remove newline characters from the base64 string
           profile_string=$(echo "$profile_string" | tr -d '\n')
-
-          # Decode the base64 string and write it to a temporary file
-          echo -n $profile_string | base64 --decode -o $RUNNER_TEMP/file$(date +%s).mobileprovision
+  
+          # Decode the base64 string and write it to file in the Provisioning Profiles directory
+          echo -n $profile_string | base64 --decode -o ~/Library/MobileDevice/Provisioning\ Profiles/file$(date +%s).mobileprovision
         done
-
-        # Move all the temporary files to the desired directory
-        mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-        mv $RUNNER_TEMP/*.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles
 
     - shell: bash
       id: import_certificate
