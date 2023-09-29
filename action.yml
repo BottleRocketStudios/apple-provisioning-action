@@ -49,7 +49,7 @@ runs:
           profile_string=$(echo "$profile_string" | tr -d '\n')
 
           # Decode the base64 string and write it to file in the Provisioning Profiles directory
-          # echo -n $profile_string | base64 --decode -o ~/Library/MobileDevice/Provisioning\ Profiles/file$(date +%s).mobileprovision
+          echo -n $profile_string | base64 --decode -o ~/Library/MobileDevice/Provisioning\ Profiles/file$(date +%s).mobileprovision
         done
   
     # - shell: bash
