@@ -45,7 +45,10 @@ runs:
         IFS=$'\n' read -ra profile_list <<< "${{ inputs.profiles }}"
 
         for profile_string in "${profile_list[@]}"; do
-            echo $profile_string
+          # Remove newline characters from the base64 string
+          profile_string=$(echo "$profile_string" | tr -d '\n')
+
+          echo $profile_string
         done
   
     # - shell: bash
