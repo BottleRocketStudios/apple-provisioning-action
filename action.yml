@@ -71,8 +71,8 @@ runs:
         fi
 
         # Set the name and password as an action output
-        echo "keychain_name=$(echo $keychain_name)" >> $GITHUB_OUTPUT
-        echo "keychain_password=$(echo $keychain_password)" >> $GITHUB_OUTPUT
+        # echo "keychain_name=$(echo $keychain_name)" >> $GITHUB_OUTPUT
+        # echo "keychain_password=$(echo $keychain_password)" >> $GITHUB_OUTPUT
 
         # Check if the keychain already exists
         existing_keychain=$(security list-keychains | grep -Eo "/.*$keychain_name")
@@ -82,22 +82,22 @@ runs:
         else
           if [ "${{ inputs.requires_keychain_creation }}" = true ]; then
             echo "The keychain $keychain_name already exists and keychain creation was required."
-            # exit 1
+            exit 1
           fi
         fi
 
         # Set the keychain as the default keychain
-        security default-keychain -s "$keychain_name"
+        # security default-keychain -s "$keychain_name"
 
         # Unlock the keychain
-        security unlock-keychain -p "$keychain_password" "$keychain_name"
+        # security unlock-keychain -p "$keychain_password" "$keychain_name"
 
         # Import the signing certificate
-        base64 --decode <<< "${{ inputs.signing_certificate }}" > $RUNNER_TEMP/certificate.p12
-        security import $RUNNER_TEMP/certificate.p12 -k "$keychain_name" -P "${{ inputs.signing_certificate_password }}" -T /usr/bin/codesign
+        # base64 --decode <<< "${{ inputs.signing_certificate }}" > $RUNNER_TEMP/certificate.p12
+        # security import $RUNNER_TEMP/certificate.p12 -k "$keychain_name" -P "${{ inputs.signing_certificate_password }}" -T /usr/bin/codesign
 
         # Set the Key Partition List
-        security set-key-partition-list -S apple-tool:,apple: -s -k "$keychain_password" "$keychain_name"
+        # security set-key-partition-list -S apple-tool:,apple: -s -k "$keychain_password" "$keychain_name"
 
         # Update the keychain list
-        security list-keychains -d user -s "$keychain_name" "login.keychain"
+        # security list-keychains -d user -s "$keychain_name" "login.keychain"
