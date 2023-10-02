@@ -67,7 +67,7 @@ runs:
         fi
 
         # Set the password as an action output
-        echo "keychain_password=$(echo keychain_password)" >> $GITHUB_OUTPUT
+        echo "keychain_password=$(echo $keychain_password)" >> $GITHUB_OUTPUT
 
         # Create a new keychain if specified
         if [ "${{ inputs.create_keychain }}" = true ]; then
