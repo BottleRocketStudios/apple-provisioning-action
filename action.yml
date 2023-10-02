@@ -15,10 +15,10 @@ inputs:
     description: The password to the signing certificate 
     required: false
 
-  create_keychain:
-    description: Determines whether a new keychain is created
+  requires_keychain_creation:
+    description: By default, a keychain will only be created if it doesn't already exist. A value of true will fail the action if the specific keychain already exists.
     required: true
-    default: true
+    default: false
 
   keychain_name:
     description: The name for the keychain the signing certificate will be imported into. Defaults to 'provisioning_temporary'.
@@ -74,9 +74,16 @@ runs:
         echo "keychain_name=$(echo $keychain_name)" >> $GITHUB_OUTPUT
         echo "keychain_password=$(echo $keychain_password)" >> $GITHUB_OUTPUT
 
-        # Create a new keychain if specified
-        if [ "${{ inputs.create_keychain }}" = true ]; then
+        # Check if the keychain already exists
+        existing_keychain=$(security list-keychains | grep -Eo "/.*$keychain_name")
+
+        if [[ -z "$existing_keychain" ]]; then
           security create-keychain -p "$keychain_password" "$keychain_name"
+        else
+          if [ "${{ inputs.requires_keychain_creation }}" = true ]; then
+            echo "The keychain $keychain_name already exists and keychain creation was required."
+            exit 1
+          fi
         fi
 
         # Set the keychain as the default keychain
