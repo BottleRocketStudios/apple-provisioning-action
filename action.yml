@@ -84,6 +84,8 @@ runs:
           if [ "${{ inputs.requires_keychain_creation }}" = true ]; then
             echo "The keychain $keychain_name already exists and keychain creation was required."
             exit 1
+          else 
+            echo "The kecyhain $keychain_name already exists."
           fi
         fi
 
