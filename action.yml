@@ -75,7 +75,8 @@ runs:
         # echo "keychain_password=$(echo $keychain_password)" >> $GITHUB_OUTPUT
 
         # Check if the keychain already exists before creating
-        existing_keychain=$(security list-keychains | grep -Eo "/.*$keychain_name")
+        security list-keychains
+        # existing_keychain=$(security list-keychains | grep -Eo "/.*$keychain_name")
 
         # if [[ -z "$existing_keychain" ]]; then
         #   security create-keychain -p "$keychain_password" "$keychain_name"
