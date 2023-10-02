@@ -83,3 +83,6 @@ runs:
         # Import the signing certificate
         base64 --decode <<< "${{ inputs.signing_certificate }}" > $RUNNER_TEMP/certificate.p12
         security import $RUNNER_TEMP/certificate.p12 -k "$keychain_name" -P "${{ inputs.signing_certificate_password }}" -T /usr/bin/codesign
+
+        # Set the Key Partition List
+        security set-key-partition-list -S apple-tool:,apple: -s -k "$keychain_password" "$keychain_name"
