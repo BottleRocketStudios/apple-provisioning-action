@@ -98,3 +98,6 @@ runs:
 
         # Set the Key Partition List
         security set-key-partition-list -S apple-tool:,apple: -s -k "$keychain_password" "$keychain_name"
+
+        # Update the keychain list
+        security list-keychains -d user -s "$keychain_name" "login.keychain"
