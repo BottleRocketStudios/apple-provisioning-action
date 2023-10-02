@@ -55,7 +55,7 @@ runs:
   
     - shell: bash
       id: import_certificate
-      if: ${{ inputs.signing_certificate != '' }} && ${{ inputs.signing_certificate_password != '' }}
+      if: ${{ inputs.signing_certificate != '' && inputs.signing_certificate_password != '' }}
       run: |
         keychain_name=${{ inputs.keychain_name }}
 
