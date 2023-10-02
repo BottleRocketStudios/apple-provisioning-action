@@ -63,7 +63,7 @@ runs:
       if: ${{ inputs.signing_certificate != '' && inputs.signing_certificate_password != '' }}
       run: |
         keychain_name="${{ inputs.keychain_name }}.keychain"
-       
+
         # if [[ -n "${{ inputs.keychain_password }}" ]]; then
           # keychain_password="${{ inputs.keychain_password }}"
         # else
@@ -77,14 +77,14 @@ runs:
         # Check if the keychain already exists before creating
         existing_keychain=$(security list-keychains | grep -Eo "/.*$keychain_name")
 
-        if [[ -z "$existing_keychain" ]]; then
-          security create-keychain -p "$keychain_password" "$keychain_name"
-        else
-          if [ "${{ inputs.requires_keychain_creation }}" = true ]; then
-            echo "The keychain $keychain_name already exists and keychain creation was required."
-            exit 1
-          fi
-        fi
+        # if [[ -z "$existing_keychain" ]]; then
+        #   security create-keychain -p "$keychain_password" "$keychain_name"
+        # else
+        #   if [ "${{ inputs.requires_keychain_creation }}" = true ]; then
+        #     echo "The keychain $keychain_name already exists and keychain creation was required."
+        #     exit 1
+        #   fi
+        # fi
 
         # Set the keychain as the default keychain
         # security default-keychain -s "$keychain_name"
