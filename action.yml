@@ -77,7 +77,7 @@ runs:
         security unlock-keychain -p "$keychain_password" "$keychain_name"
 
         # Import the signing certificate
-        echo "${{ inputs.signing_certificate }} | base64 --decode | security import -k "$keychain_name" -P "${{ inputs.signing_certificate_password }}" -T /usr/bin/codesign
+        echo "${{ inputs.signing_certificate }}" | base64 --decode | security import -k "$keychain_name" -P "${{ inputs.signing_certificate_password }}" -T /usr/bin/codesign
 
         # Set the keychain as the default keychain
         security default-keychain -s "$keychain_name"
