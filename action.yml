@@ -32,7 +32,7 @@ inputs:
 outputs:
   keychain_password:
     description: The password to unlock the temporary keychain
-    value: $ {{ steps.import_certificate.outputs.keychain_password }}
+    value: ${{ steps.import_certificate.outputs.keychain_password }}
 
 runs:
   using: "composite"
