@@ -78,15 +78,15 @@ runs:
         keychain_list=$(security list-keychains)
 
         if echo "$keychain_list" | grep -q "$keychain_name"; then
-          echo "The keychain $keychain_name does not exist. Creating..."
-          security create-keychain -p "$keychain_password" "$keychain_name"
-        else
           if [ "${{ inputs.requires_keychain_creation }}" = true ]; then
             echo "The keychain $keychain_name already exists and keychain creation was required."
             exit 1
           else 
             echo "The kecyhain $keychain_name already exists."
           fi
+        else
+          echo "The keychain $keychain_name does not exist. Creating..."
+          security create-keychain -p "$keychain_password" "$keychain_name"
         fi
 
         # Set the keychain as the default keychain
