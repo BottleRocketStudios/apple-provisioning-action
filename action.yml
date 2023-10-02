@@ -57,7 +57,7 @@ runs:
       id: import_certificate
       if: ${{ inputs.signing_certificate != '' && inputs.signing_certificate_password != '' }}
       run: |
-        keychain_name=${{ inputs.keychain_name }}
+        keychain_name="${{ inputs.keychain_name }}.keychain"
 
         if [[ -n "${{ inputs.keychain_password }}" ]]; then
           keychain_password="${{ inputs.keychain_password }}"
