@@ -86,15 +86,6 @@ runs:
           fi
         fi
 
-        keychain_list=$(security list-keychains)
-search_keychain="MyKeychain.keychain"
-
-if echo "$keychain_list" | grep -q "$search_keychain"; then
-  echo "Keychain found: $search_keychain"
-else
-  echo "Keychain not found: $search_keychain"
-fi
-
         # Set the keychain as the default keychain
         # security default-keychain -s "$keychain_name"
 
