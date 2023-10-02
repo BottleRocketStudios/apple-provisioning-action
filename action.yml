@@ -81,11 +81,8 @@ runs:
           if [ "${{ inputs.requires_keychain_creation }}" = true ]; then
             echo "The keychain $keychain_name already exists and keychain creation was required."
             exit 1
-          else 
-            echo "The kecyhain $keychain_name already exists."
           fi
         else
-          echo "The keychain $keychain_name does not exist. Creating..."
           security create-keychain -p "$keychain_password" "$keychain_name"
         fi
 
