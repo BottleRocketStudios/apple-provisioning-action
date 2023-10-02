@@ -30,6 +30,10 @@ inputs:
     required: false
 
 outputs:
+  keychain_name:
+    description: The name of the temporary keychain
+    value: ${{ steps.import_certificate.outputs.keychain_name }}
+
   keychain_password:
     description: The password to unlock the temporary keychain
     value: ${{ steps.import_certificate.outputs.keychain_password }}
@@ -66,7 +70,8 @@ runs:
           keychain_password="$(uuidgen)"
         fi
 
-        # Set the password as an action output
+        # Set the name and password as an action output
+        echo "keychain_name=$(echo $keychain_name)" >> $GITHUB_OUTPUT
         echo "keychain_password=$(echo $keychain_password)" >> $GITHUB_OUTPUT
 
         # Create a new keychain if specified
