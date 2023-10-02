@@ -75,17 +75,25 @@ runs:
         # echo "keychain_password=$(echo $keychain_password)" >> $GITHUB_OUTPUT
 
         # Check if the keychain already exists before creating
-        security list-keychains
-        # existing_keychain=$(security list-keychains | grep -Eo "/.*$keychain_name")
+        keychain_list=$(security list-keychains)
 
-        # if [[ -z "$existing_keychain" ]]; then
-        #   security create-keychain -p "$keychain_password" "$keychain_name"
-        # else
-        #   if [ "${{ inputs.requires_keychain_creation }}" = true ]; then
-        #     echo "The keychain $keychain_name already exists and keychain creation was required."
-        #     exit 1
-        #   fi
-        # fi
+        if echo "$keychain_list" | grep -q "$keychain_name"; then
+           security create-keychain -p "$keychain_password" "$keychain_name"
+        else
+          if [ "${{ inputs.requires_keychain_creation }}" = true ]; then
+            echo "The keychain $keychain_name already exists and keychain creation was required."
+            exit 1
+          fi
+        fi
+
+        keychain_list=$(security list-keychains)
+search_keychain="MyKeychain.keychain"
+
+if echo "$keychain_list" | grep -q "$search_keychain"; then
+  echo "Keychain found: $search_keychain"
+else
+  echo "Keychain not found: $search_keychain"
+fi
 
         # Set the keychain as the default keychain
         # security default-keychain -s "$keychain_name"
