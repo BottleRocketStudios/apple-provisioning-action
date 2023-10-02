@@ -42,10 +42,33 @@ jobs:
           EXPECTED_B="test-provisioning-profile-second-string"
           ACTUAL=$(cat ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovision)
 
-          echo $ACTUAL
-
           if [[ "$ACTUAL" = *"$EXPECTED_A"* ]] && [[ "$ACTUAL" = *"$EXPECTED_B"* ]]; then
             exit 0
           else 
+            exit 1
+          fi
+
+  test_cert:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Test Certificate Import
+        uses: ./
+        with:
+          signing_certificate: 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
+          signing_certificate_password: Test1234
+
+      - name: Verify
+        run: |
+          keychain_name="provisioning_temporary.keychain"
+          item_name="google.com"
+
+          security find-certificate -a "$item_name" -s "$keychain_name" >/dev/null 2>&1
+
+          if [[ $? -eq 0 ]]; then
+            exit 0
+          else
             exit 1
           fi
