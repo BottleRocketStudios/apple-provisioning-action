@@ -65,10 +65,12 @@ jobs:
           keychain_name="provisioning_temporary.keychain"
           item_name="google.com"
 
-          security find-certificate -a "$item_name" -s "$keychain_name" >/dev/null 2>&1
+          # Search for the certificate and capture the output
+          output=$(security find-certificate -a "$item_name" -s "$keychain_name" 2>&1)
 
-          if [[ $? -eq 0 ]]; then
-            exit 0
+          # Check if the output contains the "No certificate matching" error message
+          if [[ $output == '' ]]; then
+            exit 1  # Certificate not found
           else
-            exit 1
+            exit 0  # Certificate found
           fi
