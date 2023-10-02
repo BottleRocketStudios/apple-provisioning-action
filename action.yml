@@ -50,7 +50,8 @@ runs:
           profile_string=$(echo "$profile_string" | tr -d '\n' | tr -d ' ')
           
           # Decode the base64 string and write it to file in the Provisioning Profiles directory
-          echo -n $profile_string | base64 --decode -o ~/Library/MobileDevice/Provisioning\ Profiles/file-$profile_string.mobileprovision
+          md5_hash=$(echo -n "$profile_string" | md5)
+          echo -n $profile_string | base64 --decode -o ~/Library/MobileDevice/Provisioning\ Profiles/file-$md5_hash.mobileprovision
         done
   
     - shell: bash
