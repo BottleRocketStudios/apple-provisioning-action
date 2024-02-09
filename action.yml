@@ -23,7 +23,7 @@ inputs:
   keychain_name:
     description: The name for the keychain the signing certificate will be imported into. Defaults to 'provisioning_temporary'.
     required: true
-    default: 'provisioning_temporary'
+    default: 'provisioning_temporary.keychain'
 
   keychain_password:
     description: The password to unlock the temporary keychain. Will be automatically generated when using the default keychain name
@@ -62,7 +62,7 @@ runs:
       id: import_certificate
       if: ${{ inputs.signing_certificate != '' && inputs.signing_certificate_password != '' }}
       run: |
-        keychain_name="${{ inputs.keychain_name }}.keychain"
+        keychain_name="${{ inputs.keychain_name }}"
 
         if [[ -n "${{ inputs.keychain_password }}" ]]; then
           keychain_password="${{ inputs.keychain_password }}"
@@ -93,8 +93,9 @@ runs:
         security unlock-keychain -p "$keychain_password" "$keychain_name"
 
         # Import the signing certificate
-        base64 --decode <<< "${{ inputs.signing_certificate }}" > $RUNNER_TEMP/certificate.p12
-        security import $RUNNER_TEMP/certificate.p12 -k "$keychain_name" -P "${{ inputs.signing_certificate_password }}" -T /usr/bin/codesign
+        md5_hash=$(echo -n "${{ inputs.signing_certificate }}" | md5)
+        base64 --decode <<< "${{ inputs.signing_certificate }}" > $RUNNER_TEMP/certificate-$md5_hash.p12
+        security import $RUNNER_TEMP/certificate-$md5_hash.p12 -k "$keychain_name" -P "${{ inputs.signing_certificate_password }}" -T /usr/bin/codesign
 
         # Set the Key Partition List
         security set-key-partition-list -S apple-tool:,apple: -s -k "$keychain_password" "$keychain_name"
