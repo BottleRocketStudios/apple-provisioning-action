@@ -57,7 +57,9 @@ runs:
           # Decode the base64 string and write it to file in the Provisioning Profiles directory
           md5_hash=$(echo -n "$profile_string" | md5)
           echo -n $profile_string | base64 --decode -o ~/Library/MobileDevice/Provisioning\ Profiles/file-$md5_hash.mobileprovision
+          
           count=$((count + 1))
+          echo "Successfully moved profile with MD5: $md5_hash."
         done
 
         echo "Successfully moved $count profile(s)."
