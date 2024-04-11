@@ -60,7 +60,7 @@ runs:
           count=$((count + 1))
         done
 
-        echo "Successfully moved $count profiles."
+        echo "Successfully moved $count profile(s)."
 
     - shell: bash
       id: import_certificate
