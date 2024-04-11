@@ -47,6 +47,7 @@ runs:
       run: |
         IFS=$'\n'
         profile_list=(${{ inputs.profiles }})
+        count=0
 
         mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
         for profile_string in "${profile_list[@]}"; do
@@ -56,8 +57,13 @@ runs:
           # Decode the base64 string and write it to file in the Provisioning Profiles directory
           md5_hash=$(echo -n "$profile_string" | md5)
           echo -n $profile_string | base64 --decode -o ~/Library/MobileDevice/Provisioning\ Profiles/file-$md5_hash.mobileprovision
+          
+          count=$((count + 1))
+          echo "Successfully moved profile with MD5: $md5_hash."
         done
-  
+
+        echo "Successfully moved $count profile(s)."
+
     - shell: bash
       id: import_certificate
       if: ${{ inputs.signing_certificate != '' && inputs.signing_certificate_password != '' }}
@@ -84,6 +90,7 @@ runs:
           fi
         else
           security create-keychain -p "$keychain_password" "$keychain_name"
+          echo "Successfully created keychain: $keychain_name."
         fi
 
         # Set the keychain as the default keychain
@@ -96,6 +103,7 @@ runs:
         md5_hash=$(echo -n "${{ inputs.signing_certificate }}" | md5)
         base64 --decode <<< "${{ inputs.signing_certificate }}" > $RUNNER_TEMP/certificate-$md5_hash.p12
         security import $RUNNER_TEMP/certificate-$md5_hash.p12 -k "$keychain_name" -P "${{ inputs.signing_certificate_password }}" -T /usr/bin/codesign
+        echo "Successfully imported certificate with MD5: $md5_hash."
 
         # Set the Key Partition List
         security set-key-partition-list -S apple-tool:,apple: -s -k "$keychain_password" "$keychain_name"
