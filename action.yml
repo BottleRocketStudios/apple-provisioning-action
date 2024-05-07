@@ -99,6 +99,9 @@ runs:
         # Unlock the keychain
         security unlock-keychain -p "$keychain_password" "$keychain_name"
 
+        # Update Keychain Settings
+        security set-keychain-settings "$keychain_name"
+
         # Import the signing certificate
         md5_hash=$(echo -n "${{ inputs.signing_certificate }}" | md5)
         base64 --decode <<< "${{ inputs.signing_certificate }}" > $RUNNER_TEMP/certificate-$md5_hash.p12
